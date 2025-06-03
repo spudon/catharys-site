@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catharys: Storyteller & Creative Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light background */
+            color: #333;
+        }
+        html[lang="fa"] body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%; /* Adjust width as needed */
+            height: 3px;
+            background-color: #fca311; /* Accent color */
+            border-radius: 9999px; /* Rounded corners for the underline */
+        }
+        html[dir="rtl"] .section-heading::after {
+            left: auto;
+            right: 0;
+        }
+        /* Custom modal styles */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-active {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #fca311; /* Orange */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto; /* Center the loader */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white shadow-sm py-4 sticky top-0 z-50">
+        <nav class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-bold text-gray-800 rounded-lg p-2 transition duration-300 ease-in-out hover:text-gray-900" data-lang-key="nav_brand">Catharys</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-lg font-medium text-gray-700 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-2" data-lang-key="nav_about">About</a>
+                <a href="#services" class="text-lg font-medium text-gray-700 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-2" data-lang-key="nav_services">Services</a>
+                <a href="#blog" class="text-lg font-medium text-gray-700 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-2" data-lang-key="nav_blog">Blog</a>
+                <a href="#contact" class="text-lg font-medium text-gray-700 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-2" data-lang-key="nav_contact">Contact</a>
+                <button id="languageToggle" class="text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-md transition duration-300 ease-in-out" data-lang-key="lang_toggle_fa">فارسی</button>
+            </div>
+            <div class="md:hidden flex items-center">
+                 <button id="languageToggleMobile" class="text-xs font-medium bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded-md transition duration-300 ease-in-out mr-2" data-lang-key="lang_toggle_fa_mobile">فارسی</button>
+                <button id="mobile-menu-button" class="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-white bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-6">
+            <button id="close-mobile-menu" class="absolute top-4 right-4 p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <a href="#about" class="text-3xl font-medium text-gray-800 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-3" data-lang-key="nav_about_mobile">About</a>
+            <a href="#services" class="text-3xl font-medium text-gray-800 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-3" data-lang-key="nav_services_mobile">Services</a>
+            <a href="#blog" class="text-3xl font-medium text-gray-800 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-3" data-lang-key="nav_blog_mobile">Blog</a>
+            <a href="#contact" class="text-3xl font-medium text-gray-800 hover:text-orange-600 transition duration-300 ease-in-out rounded-lg p-3" data-lang-key="nav_contact_mobile">Contact</a>
+        </div>
+    </header>
+
+    <section class="relative bg-gradient-to-r from-orange-500 to-yellow-500 text-white py-20 md:py-32 overflow-hidden shadow-lg">
+        <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('https://placehold.co/1920x1080/FFFFFF/000000?text=Creative+Abstract+Background');"></div>
+        <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg" data-lang-key="hero_title">
+                    Catharys
+                </h1>
+                <p class="text-2xl md:text-3xl font-light mb-6 drop-shadow-md" data-lang-key="hero_subtitle">
+                    Storyteller & Creative Guide
+                </p>
+                <p class="text-lg md:text-xl mb-8 leading-relaxed" data-lang-key="hero_description">
+                    Unlocking Your Story, Guiding Your Creative Journey.
+                    Discover the power of your narrative and ignite your creative spark.
+                </p>
+                <a href="#about" class="inline-block bg-white text-orange-600 hover:bg-gray-100 px-8 py-4 rounded-full text-xl font-semibold shadow-xl transition transform hover:scale-105 duration-300 ease-in-out" data-lang-key="hero_button">
+                    Learn More About Me
+                </a>
+            </div>
+            <div class="md:w-1/2 flex justify-center md:justify-end">
+                <img src="https://i.postimg.cc/4nc1HgDY/image.png" alt="Catharys Profile Picture" data-lang-key-alt="hero_image_alt" class="w-64 h-64 md:w-80 md:h-80 rounded-full shadow-2xl object-cover border-4 border-white transform rotate-3 hover:rotate-0 transition duration-500 ease-in-out" onerror="this.onerror=null; this.src='https://placehold.co/400x400/FFA500/FFFFFF?text=Image+Not+Found';">
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-heading mx-auto" data-lang-key="about_heading">About Catharys</h2>
+            <div class="flex flex-col md:flex-row items-center md:space-x-12">
+                <div class="md:w-1/3 mb-8 md:mb-0">
+                    <img src="https://placehold.co/600x400/999999/FFFFFF?text=Catharys+Writing" alt="Catharys Writing" data-lang-key-alt="about_image_alt" class="rounded-xl shadow-lg w-full h-auto object-cover transform -rotate-2 hover:rotate-0 transition duration-500 ease-in-out">
+                </div>
+                <div class="md:w-2/3 text-lg leading-relaxed">
+                    <p class="mb-6" data-lang-key="about_p1">
+                        Hello! I'm Catharys, and I believe everyone has a story worth telling. My journey into storytelling began with a deep fascination for human experiences and the unique ways we express ourselves. From a young age, I found solace and strength in narratives, both written and spoken, realizing their profound power to connect, heal, and inspire.
+                    </p>
+                    <p class="mb-6" data-lang-key="about_p2">
+                        As a creative guide, my mission is to empower you to discover, craft, and share your unique narratives. Whether you're an aspiring writer, an entrepreneur looking to articulate your brand's journey, or simply someone seeking to understand your own life's chapters, I provide a compassionate and insightful space for exploration. I'll help you navigate creative blocks, find your authentic voice, and transform your experiences into compelling stories.
+                    </p>
+                    <p class="mb-6" data-lang-key="about_p3">
+                        My approach blends narrative theory with practical, actionable strategies, ensuring that you not only understand the 'why' behind powerful storytelling but also the 'how.' Let's embark on this creative adventure together and unlock the incredible stories waiting within you.
+                    </p>
+                    <p class="font-semibold text-orange-600" data-lang-key="about_quote">
+                        "Your story is your superpower. Let's unleash it."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-16 md:py-24 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-heading mx-auto" data-lang-key="services_heading">My Services</h2>
+            <p class="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto" data-lang-key="services_description">
+                I offer a range of services designed to help you harness the power of storytelling and unlock your creative potential.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-orange-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13.5m0-13.5c-4.142 0-7.5 3.13-7.5 7s3.358 7 7.5 7c4.142 0 7.5-3.13 7.5-7s-3.358-7-7.5-7z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service1_title">Personal Story Coaching</h3>
+                    <p class="text-gray-700 leading-relaxed" data-lang-key="service1_text">One-on-one sessions to help you identify, articulate, and refine your personal narrative for greater clarity and impact in your life and work.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-orange-600 mb-4">
+                         <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service2_title">Creative Writing Workshops</h3>
+                    <p class="text-gray-700 leading-relaxed" data-lang-key="service2_text">Engaging group workshops designed to spark creativity, develop writing skills, and foster a supportive community for aspiring and seasoned writers.</p>
+                </div>
+                 <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-orange-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.033 3-9s-1.343-9-3-9m0 18v-8.003c0-1.07.26-2.102.76-3.033M12 12V3" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service3_title">Brand Story Development</h3>
+                    <p class="text-gray-700 leading-relaxed" data-lang-key="service3_text">Craft compelling narratives for your business or project that resonate with your audience, build trust, and communicate your unique value proposition.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-orange-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service4_title">Public Speaking & Presentation Coaching</h3>
+                    <p class="text-gray-700 leading-relaxed" data-lang-key="service4_text">Learn to deliver your stories with confidence and charisma, captivating your audience whether on stage, in a meeting, or online.</p>
+                </div>
+                 <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-orange-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-1.25-3M15 10V5.013a2.995 2.995 0 00-3-3.013A2.995 2.995 0 009 5.013V10m0 0C5.555 11.5 5 14.5 5 17h14c0-2.5-.555-5.5-4-7z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service5_title">Content Strategy & Narrative Design</h3>
+                    <p class="text-gray-700 leading-relaxed" data-lang-key="service5_text">Develop a cohesive content strategy rooted in powerful narratives that engage your audience and achieve your communication goals.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
+                    <div class="text-orange-600 mb-4">
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service6_title">Creative Project Mentorship</h3>
+                    <p class="text-gray-700 leading-relaxed" data-lang-key="service6_text">Receive personalized guidance and feedback on your creative projects, from initial concept to final execution, ensuring your vision comes to life.</p>
+                </div>
+            </div>
+
+            <div id="ai-tools" class="mt-16 pt-12 border-t border-gray-300">
+                <h3 class="text-3xl md:text-4xl font-bold text-center mb-10 section-heading mx-auto" data-lang-key="ai_tools_heading">✨ AI-Powered Creative Tools</h3>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                        <h4 class="text-2xl font-semibold text-gray-800 mb-4 text-center" data-lang-key="ai_story_generator_title">Story Idea Generator ✨</h4>
+                        <div class="mb-4">
+                            <label for="storyTheme" class="block text-sm font-medium text-gray-700 mb-1" data-lang-key="ai_story_generator_label">Enter a theme or keywords:</label>
+                            <input type="text" id="storyTheme" name="storyTheme" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500" placeholder="e.g., mystery, friendship, space travel" data-lang-key-placeholder="ai_story_generator_placeholder">
+                        </div>
+                        <button id="generateStoryIdeasBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center" data-lang-key="ai_story_generator_button">
+                            Generate Ideas
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 rtl:mr-2 rtl:ml-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div id="storyIdeasLoader" class="mt-4 hidden">
+                            <div class="loader"></div>
+                            <p class="text-center text-gray-600 mt-2" data-lang-key="ai_story_generator_loading">Generating ideas...</p>
+                        </div>
+                        <div id="storyIdeasResult" class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[100px] text-gray-700 whitespace-pre-wrap"></div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                        <h4 class="text-2xl font-semibold text-gray-800 mb-4 text-center" data-lang-key="ai_block_breaker_title">Creative Block Breaker ✨</h4>
+                        <div class="mb-4">
+                            <label for="creativeBlock" class="block text-sm font-medium text-gray-700 mb-1" data-lang-key="ai_block_breaker_label">Describe your creative block:</label>
+                            <textarea id="creativeBlock" name="creativeBlock" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500" placeholder="e.g., I can't start my novel, I lack inspiration for my painting..." data-lang-key-placeholder="ai_block_breaker_placeholder"></textarea>
+                        </div>
+                        <button id="breakBlockBtn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center" data-lang-key="ai_block_breaker_button">
+                            Get Unstuck!
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 rtl:mr-2 rtl:ml-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L9 9.617l-4.389 1.996A1 1 0 003 13.5V17a1 1 0 001 1h12a1 1 0 001-1v-3.5a1 1 0 00-.611-1.887L11 9.617l6.389-2.697a1 1 0 000-1.84l-7-3zM15 16H5V14.07l3.611-1.642a1 1 0 00.778 0L15 14.07V16zm-1.889-4.914l-2.611-1.187a1 1 0 00-.778 0L7.09 11.086l-3.279-1.4a1 1 0 00-.811.453L1 11.587V13h18v-1.413l-2-1.44a1 1 0 00-.811-.453l-3.279 1.4zM10 7.617L3.611 5.086l7-3 6.389 2.531L10 7.617z" />
+                            </svg>
+                        </button>
+                        <div id="blockBreakerLoader" class="mt-4 hidden">
+                            <div class="loader"></div>
+                             <p class="text-center text-gray-600 mt-2" data-lang-key="ai_block_breaker_loading">Finding solutions...</p>
+                        </div>
+                        <div id="blockBreakerResult" class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[100px] text-gray-700 whitespace-pre-wrap"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16">
+                <a href="#contact" class="inline-block bg-orange-600 text-white hover:bg-orange-700 px-8 py-4 rounded-full text-xl font-semibold shadow-xl transition transform hover:scale-105 duration-300 ease-in-out" data-lang-key="services_inquire_button">
+                    Inquire About Services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog" class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-heading mx-auto" data-lang-key="blog_heading">The Storyteller's Sanctuary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden transform hover:-translate-y-1">
+                    <img src="https://placehold.co/600x400/E0E0E0/333333?text=Finding+Your+Voice" alt="Blog Post Image 1" data-lang-key-alt="blog1_image_alt" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="blog1_title">Finding Your Voice in the Quiet Moments</h3>
+                        <p class="text-gray-600 text-sm mb-4" data-lang-key="blog1_date">Published on May 28, 2025</p>
+                        <p class="text-gray-700 mb-4" data-lang-key="blog1_excerpt">Discover how stillness and introspection can be the most fertile ground for unearthing your authentic narrative. Learn practical tips for listening to your inner storyteller.</p>
+                        <a href="#" class="text-orange-600 hover:text-orange-800 font-medium transition duration-300 ease-in-out" data-lang-key="blog_read_more">Read More &rarr;</a>
+                    </div>
+                </article>
+                <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden transform hover:-translate-y-1">
+                    <img src="https://placehold.co/600x400/D0D0D0/333333?text=Overcoming+Blocks" alt="Blog Post Image 2" data-lang-key-alt="blog2_image_alt" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="blog2_title">The Art of Beginning Again: A Creative Restart</h3>
+                        <p class="text-gray-600 text-sm mb-4" data-lang-key="blog2_date">Published on May 20, 2025</p>
+                        <p class="text-gray-700 mb-4" data-lang-key="blog2_excerpt">Feeling stuck? This post explores strategies for overcoming creative blocks and embracing the power of fresh starts in your storytelling journey.</p>
+                        <a href="#" class="text-orange-600 hover:text-orange-800 font-medium transition duration-300 ease-in-out" data-lang-key="blog_read_more">Read More &rarr;</a>
+                    </div>
+                </article>
+                <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden transform hover:-translate-y-1">
+                    <img src="https://placehold.co/600x400/C0C0C0/333333?text=First+Drafts" alt="Blog Post Image 3" data-lang-key-alt="blog3_image_alt" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="blog3_title">Why Your Messy First Draft is Pure Gold</h3>
+                        <p class="text-gray-600 text-sm mb-4" data-lang-key="blog3_date">Published on May 15, 2025</p>
+                        <p class="text-gray-700 mb-4" data-lang-key="blog3_excerpt">Embrace imperfection! Learn why the raw, unpolished first draft is an essential step in the creative process and how to celebrate its true value.</p>
+                        <a href="#" class="text-orange-600 hover:text-orange-800 font-medium transition duration-300 ease-in-out" data-lang-key="blog_read_more">Read More &rarr;</a>
+                    </div>
+                </article>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-orange-600 text-white hover:bg-orange-700 px-8 py-4 rounded-full text-xl font-semibold shadow-xl transition transform hover:scale-105 duration-300 ease-in-out" data-lang-key="blog_view_all_button">
+                    View All Blog Posts
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 section-heading mx-auto" data-lang-key="contact_heading">Connect with Catharys</h2>
+            <div class="max-w-3xl mx-auto bg-gray-50 p-8 md:p-12 rounded-xl shadow-lg">
+                <p class="text-lg text-gray-700 text-center mb-8" data-lang-key="contact_description">
+                    Ready to explore your story? Have a question about a creative project? I'd love to hear from you.
+                </p>
+                <form id="contactForm" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2" data-lang-key="contact_name_label">Name</label>
+                        <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 transition duration-300 ease-in-out" placeholder="Your Name" data-lang-key-placeholder="contact_name_placeholder" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2" data-lang-key="contact_email_label">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 transition duration-300 ease-in-out" placeholder="your.email@example.com" data-lang-key-placeholder="contact_email_placeholder" required>
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2" data-lang-key="contact_subject_label">Subject</label>
+                        <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 transition duration-300 ease-in-out" placeholder="Subject of your message" data-lang-key-placeholder="contact_subject_placeholder" required>
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2" data-lang-key="contact_message_label">Message</label>
+                        <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 transition duration-300 ease-in-out" placeholder="Write your message here..." data-lang-key-placeholder="contact_message_placeholder" required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="inline-block bg-orange-600 text-white hover:bg-orange-700 px-10 py-4 rounded-full text-xl font-semibold shadow-xl transition transform hover:scale-105 duration-300 ease-in-out" data-lang-key="contact_send_button">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+                <div class="text-center mt-8 text-gray-600">
+                    <p class="mb-2" data-lang-key="contact_direct_email_intro">You can also reach me directly at:</p>
+                    <p class="text-lg font-medium text-orange-600">contact@catharys.com</p>
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p data-lang-key="footer_copyright">&copy; 2025 Catharys. All rights reserved.</p>
+            <p class="text-sm mt-2" data-lang-key="footer_design_credit">Designed with passion by Catharys.</p>
+        </div>
+    </footer>
+
+    <div id="messageModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center hidden z-[100]">
+        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div class="modal-content bg-white w-11/12 md:max-w-md mx-auto rounded-lg shadow-lg z-50 overflow-y-auto">
+            <div class="py-4 text-left px-6">
+                <div class="flex justify-between items-center pb-3">
+                    <p id="modalTitle" class="text-2xl font-bold text-gray-800" data-lang-key="modal_title_default">Message</p>
+                    <button id="modalCloseButton" class="modal-close cursor-pointer z-50 p-2 rounded-full hover:bg-gray-200">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path></svg>
+                    </button>
+                </div>
+                <p id="modalMessage" class="text-gray-700"></p>
+                <div class="flex justify-end pt-2 mt-4">
+                    <button id="modalOkButton" class="px-4 bg-orange-500 p-3 rounded-lg text-white hover:bg-orange-400" data-lang-key="modal_ok_button">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language toggle functionality
+        const translations = {
+            en: {
+                nav_brand: "Catharys",
+                nav_about: "About",
+                nav_services: "Services",
+                nav_blog: "Blog",
+                nav_contact: "Contact",
+                lang_toggle_fa: "فارسی",
+                lang_toggle_en: "English",
+                lang_toggle_fa_mobile: "فارسی",
+                lang_toggle_en_mobile: "English",
+                nav_about_mobile: "About",
+                nav_services_mobile: "Services",
+                nav_blog_mobile: "Blog",
+                nav_contact_mobile: "Contact",
+                hero_title: "Catharys",
+                hero_subtitle: "Storyteller & Creative Guide",
+                hero_description: "Unlocking Your Story, Guiding Your Creative Journey. Discover the power of your narrative and ignite your creative spark.",
+                hero_button: "Learn More About Me",
+                hero_image_alt: "Catharys Profile Picture", 
+                about_heading: "About Catharys",
+                about_p1: "Hello! I'm Catharys, and I believe everyone has a story worth telling. My journey into storytelling began with a deep fascination for human experiences and the unique ways we express ourselves. From a young age, I found solace and strength in narratives, both written and spoken, realizing their profound power to connect, heal, and inspire.",
+                about_p2: "As a creative guide, my mission is to empower you to discover, craft, and share your unique narratives. Whether you're an aspiring writer, an entrepreneur looking to articulate your brand's journey, or simply someone seeking to understand your own life's chapters, I provide a compassionate and insightful space for exploration. I'll help you navigate creative blocks, find your authentic voice, and transform your experiences into compelling stories.",
+                about_p3: "My approach blends narrative theory with practical, actionable strategies, ensuring that you not only understand the 'why' behind powerful storytelling but also the 'how.' Let's embark on this creative adventure together and unlock the incredible stories waiting within you.",
+                about_quote: "\"Your story is your superpower. Let's unleash it.\"",
+                about_image_alt: "Catharys Writing",
+                services_heading: "My Services",
+                services_description: "I offer a range of services designed to help you harness the power of storytelling and unlock your creative potential.",
+                service1_title: "Personal Story Coaching",
+                service1_text: "One-on-one sessions to help you identify, articulate, and refine your personal narrative for greater clarity and impact in your life and work.",
+                service2_title: "Creative Writing Workshops",
+                service2_text: "Engaging group workshops designed to spark creativity, develop writing skills, and foster a supportive community for aspiring and seasoned writers.",
+                service3_title: "Brand Story Development",
+                service3_text: "Craft compelling narratives for your business or project that resonate with your audience, build trust, and communicate your unique value proposition.",
+                service4_title: "Public Speaking & Presentation Coaching",
+                service4_text: "Learn to deliver your stories with confidence and charisma, captivating your audience whether on stage, in a meeting, or online.",
+                service5_title: "Content Strategy & Narrative Design",
+                service5_text: "Develop a cohesive content strategy rooted in powerful narratives that engage your audience and achieve your communication goals.",
+                service6_title: "Creative Project Mentorship",
+                service6_text: "Receive personalized guidance and feedback on your creative projects, from initial concept to final execution, ensuring your vision comes to life.",
+                ai_tools_heading: "✨ AI-Powered Creative Tools",
+                ai_story_generator_title: "Story Idea Generator ✨",
+                ai_story_generator_label: "Enter a theme or keywords:",
+                ai_story_generator_placeholder: "e.g., mystery, friendship, space travel",
+                ai_story_generator_button: "Generate Ideas",
+                ai_story_generator_loading: "Generating ideas...",
+                ai_block_breaker_title: "Creative Block Breaker ✨",
+                ai_block_breaker_label: "Describe your creative block:",
+                ai_block_breaker_placeholder: "e.g., I can't start my novel, I lack inspiration for my painting...",
+                ai_block_breaker_button: "Get Unstuck!",
+                ai_block_breaker_loading: "Finding solutions...",
+                services_inquire_button: "Inquire About Services",
+                blog_heading: "The Storyteller's Sanctuary",
+                blog1_title: "Finding Your Voice in the Quiet Moments",
+                blog1_date: "Published on May 28, 2025",
+                blog1_excerpt: "Discover how stillness and introspection can be the most fertile ground for unearthing your authentic narrative. Learn practical tips for listening to your inner storyteller.",
+                blog1_image_alt: "Blog Post Image: Finding Your Voice",
+                blog2_title: "The Art of Beginning Again: A Creative Restart",
+                blog2_date: "Published on May 20, 2025",
+                blog2_excerpt: "Feeling stuck? This post explores strategies for overcoming creative blocks and embracing the power of fresh starts in your storytelling journey.",
+                blog2_image_alt: "Blog Post Image: Overcoming Blocks",
+                blog3_title: "Why Your Messy First Draft is Pure Gold",
+                blog3_date: "Published on May 15, 2025",
+                blog3_excerpt: "Embrace imperfection! Learn why the raw, unpolished first draft is an essential step in the creative process and how to celebrate its true value.",
+                blog3_image_alt: "Blog Post Image: First Drafts",
+                blog_read_more: "Read More &rarr;",
+                blog_view_all_button: "View All Blog Posts",
+                contact_heading: "Connect with Catharys",
+                contact_description: "Ready to explore your story? Have a question about a creative project? I'd love to hear from you.",
+                contact_name_label: "Name",
+                contact_name_placeholder: "Your Name",
+                contact_email_label: "Email",
+                contact_email_placeholder: "your.email@example.com",
+                contact_subject_label: "Subject",
+                contact_subject_placeholder: "Subject of your message",
+                contact_message_label: "Message",
+                contact_message_placeholder: "Write your message here...",
+                contact_send_button: "Send Message",
+                contact_direct_email_intro: "You can also reach me directly at:",
+                footer_copyright: "&copy; 2025 Catharys. All rights reserved.",
+                footer_design_credit: "Designed with passion by Catharys.",
+                modal_title_default: "Message",
+                modal_ok_button: "OK",
+                modal_message_sent_title: "Message Sent!",
+                modal_message_sent_text: "Thank you, {name}. Your message has been received (simulated).",
+                modal_input_required_title: "Input Required",
+                modal_input_required_text: "Please enter some text to get started.",
+                modal_api_error_title: "API Error",
+                modal_api_error_text: "Received an unexpected response from the AI. Please check the console for details.",
+                modal_error_title: "Error",
+                modal_error_text: "An error occurred: {errorMessage}. Check the console for more details."
+            },
+            fa: {
+                nav_brand: "کَثاریس",
+                nav_about: "درباره من",
+                nav_services: "خدمات",
+                nav_blog: "وبلاگ",
+                nav_contact: "تماس",
+                lang_toggle_fa: "فارسی",
+                lang_toggle_en: "English",
+                lang_toggle_fa_mobile: "فارسی",
+                lang_toggle_en_mobile: "English",
+                nav_about_mobile: "درباره من",
+                nav_services_mobile: "خدمات",
+                nav_blog_mobile: "وبلاگ",
+                nav_contact_mobile: "تماس",
+                hero_title: "کَثاریس",
+                hero_subtitle: "راوی و راهنمای خلاقیت",
+                hero_description: "گشودن قفل داستان شما، هدایت سفر خلاقانه شما. قدرت روایت خود را کشف کنید و جرقه‌ی خلاقیت خود را شعله‌ور سازید.",
+                hero_button: "بیشتر درباره من بدانید",
+                hero_image_alt: "عکس پروفایل کثاریس", 
+                about_heading: "درباره کثاریس",
+                about_p1: "سلام! من کثاریس هستم و باور دارم هر کسی داستانی برای گفتن دارد. سفر من به دنیای قصه‌گویی با شیفتگی عمیق به تجربیات انسانی و روش‌های منحصربه‌فرد ابراز خودمان آغاز شد. از سنین پایین، در روایت‌ها، چه مکتوب و چه شفاهی، آرامش و قدرت می‌یافتم و به قدرت ژرف آن‌ها در اتصال، التیام و الهام‌بخشی پی بردم.",
+                about_p2: "به عنوان یک راهنمای خلاقیت، مأموریت من توانمندسازی شما برای کشف، ساخت و به اشتراک‌گذاری روایت‌های منحصربه‌فردتان است. چه نویسنده‌ای مشتاق باشید، چه کارآفرینی که به دنبال بیان سفر برند خود است، یا صرفاً کسی که به دنبال درک فصول زندگی خود است، من فضایی دلسوزانه و بینش‌گر برای کاوش فراهم می‌کنم. به شما کمک خواهم کرد تا از موانع خلاقانه عبور کنید، صدای اصیل خود را بیابید و تجربیات خود را به داستان‌هایی جذاب تبدیل کنید.",
+                about_p3: "رویکرد من ترکیبی از نظریه روایت با استراتژی‌های عملی و کاربردی است، تا اطمینان حاصل شود که نه تنها «چرایی» پشت قصه‌گویی قدرتمند، بلکه «چگونگی» آن را نیز درک می‌کنید. بیایید با هم این ماجراجویی خلاقانه را آغاز کنیم و داستان‌های باورنکردنی نهفته در درون شما را آزاد سازیم.",
+                about_quote: "\"داستان شما، ابرقدرت شماست. بیایید آن را آزاد کنیم.\"",
+                about_image_alt: "کثاریس در حال نوشتن",
+                services_heading: "خدمات من",
+                services_description: "من طیف وسیعی از خدمات را ارائه می‌دهم که برای کمک به شما در بهره‌گیری از قدرت داستان‌سرایی و شکوفایی پتانسیل خلاقیت‌تان طراحی شده‌اند.",
+                service1_title: "کوچینگ داستان شخصی",
+                service1_text: "جلسات خصوصی برای کمک به شما در شناسایی، بیان و اصلاح روایت شخصی‌تان برای وضوح و تأثیرگذاری بیشتر در زندگی و کارتان.",
+                service2_title: "کارگاه‌های نویسندگی خلاق",
+                service2_text: "کارگاه‌های گروهی جذاب برای برانگیختن خلاقیت، توسعه مهارت‌های نویسندگی و ایجاد یک جامعه حمایتی برای نویسندگان مشتاق و باتجربه.",
+                service3_title: "توسعه داستان برند",
+                service3_text: "ایجاد روایت‌های قانع‌کننده برای کسب‌وکار یا پروژه شما که با مخاطبان‌تان ارتباط برقرار کرده، اعتماد ایجاد می‌کند و ارزش منحصربه‌فرد شما را منتقل می‌نماید.",
+                service4_title: "کوچینگ سخنرانی عمومی و ارائه",
+                service4_text: "یاد بگیرید داستان‌های خود را با اعتماد به نفس و کاریزما ارائه دهید و مخاطبان خود را چه روی صحنه، چه در جلسه یا آنلاین مجذوب کنید.",
+                service5_title: "استراتژی محتوا و طراحی روایت",
+                service5_text: "توسعه یک استراتژی محتوای منسجم ریشه‌دار در روایت‌های قدرتمند که مخاطبان شما را درگیر کرده و به اهداف ارتباطی شما دست می‌یابد.",
+                service6_title: "مربیگری پروژه‌های خلاق",
+                service6_text: "دریافت راهنمایی و بازخورد شخصی‌سازی‌شده در مورد پروژه‌های خلاقانه خود، از مفهوم اولیه تا اجرای نهایی، برای اطمینان از جان گرفتن دیدگاه شما.",
+                ai_tools_heading: "✨ ابزارهای خلاقیت مبتنی بر هوش مصنوعی",
+                ai_story_generator_title: "✨ تولیدکننده ایده داستان",
+                ai_story_generator_label: "یک تم یا کلمات کلیدی وارد کنید:",
+                ai_story_generator_placeholder: "مثال: رازآلود، دوستی، سفر فضایی",
+                ai_story_generator_button: "تولید ایده‌ها",
+                ai_story_generator_loading: "در حال تولید ایده‌ها...",
+                ai_block_breaker_title: "✨ شکننده سد خلاقیت",
+                ai_block_breaker_label: "سد خلاقیت خود را توصیف کنید:",
+                ai_block_breaker_placeholder: "مثال: نمی‌توانم رمانم را شروع کنم، برای نقاشی‌ام الهام ندارم...",
+                ai_block_breaker_button: "از سد عبور کن!",
+                ai_block_breaker_loading: "در حال یافتن راه‌حل...",
+                services_inquire_button: "استعلام درباره خدمات",
+                blog_heading: "پناهگاه داستان‌سرا",
+                blog1_title: "یافتن صدای خود در لحظات سکوت",
+                blog1_date: "منتشر شده در ۲۸ می ۲۰۲۵",
+                blog1_excerpt: "کشف کنید چگونه سکون و درون‌نگری می‌تواند حاصلخیزترین زمینه برای کشف روایت اصیل شما باشد. نکات عملی برای گوش دادن به داستان‌سرای درون خود را بیاموزید.",
+                blog1_image_alt: "تصویر پست وبلاگ: یافتن صدای خود",
+                blog2_title: "هنر دوباره آغاز کردن: یک شروع مجدد خلاقانه",
+                blog2_date: "منتشر شده در ۲۰ می ۲۰۲۵",
+                blog2_excerpt: "احساس می‌کنید گیر کرده‌اید؟ این پست به بررسی استراتژی‌هایی برای غلبه بر موانع خلاقانه و پذیرش قدرت شروع‌های تازه در سفر داستان‌سرایی شما می‌پردازد.",
+                blog2_image_alt: "تصویر پست وبلاگ: غلبه بر موانع",
+                blog3_title: "چرا پیش‌نویس آشفته اول شما طلای خالص است",
+                blog3_date: "منتشر شده در ۱۵ می ۲۰۲۵",
+                blog3_excerpt: "نقص را در آغوش بگیرید! بیاموزید چرا پیش‌نویس خام و پرداخت‌نشده اولیه یک گام اساسی در فرآیند خلاقیت است و چگونه ارزش واقعی آن را جشن بگیرید.",
+                blog3_image_alt: "تصویر پست وبلاگ: پیش‌نویس‌های اولیه",
+                blog_read_more: "بیشتر بخوانید &larr;", // RTL arrow
+                blog_view_all_button: "مشاهده تمام پست‌های وبلاگ",
+                contact_heading: "ارتباط با کثاریس",
+                contact_description: "آماده‌اید داستان خود را کشف کنید؟ درباره یک پروژه خلاقانه سوالی دارید؟ خوشحال می‌شوم از شما بشنوم.",
+                contact_name_label: "نام",
+                contact_name_placeholder: "نام شما",
+                contact_email_label: "ایمیل",
+                contact_email_placeholder: "your.email@example.com",
+                contact_subject_label: "موضوع",
+                contact_subject_placeholder: "موضوع پیام شما",
+                contact_message_label: "پیام",
+                contact_message_placeholder: "پیام خود را اینجا بنویسید...",
+                contact_send_button: "ارسال پیام",
+                contact_direct_email_intro: "همچنین می‌توانید مستقیماً با من تماس بگیرید:",
+                footer_copyright: "&copy; ۲۰۲۵ کثاریس. تمامی حقوق محفوظ است.",
+                footer_design_credit: "طراحی شده با اشتیاق توسط کثاریس.",
+                modal_title_default: "پیام",
+                modal_ok_button: "باشه",
+                modal_message_sent_title: "پیام ارسال شد!",
+                modal_message_sent_text: "متشکرم، {name}. پیام شما (به صورت شبیه‌سازی شده) دریافت شد.",
+                modal_input_required_title: "ورودی لازم است",
+                modal_input_required_text: "لطفاً برای شروع مقداری متن وارد کنید.",
+                modal_api_error_title: "خطای API",
+                modal_api_error_text: "پاسخ غیرمنتظره‌ای از هوش مصنوعی دریافت شد. لطفاً کنسول را برای جزئیات بررسی کنید.",
+                modal_error_title: "خطا",
+                modal_error_text: "خطایی رخ داد: {errorMessage}. برای جزئیات بیشتر کنسول را بررسی کنید."
+            }
+        };
+
+        let currentLanguage = 'en'; // Default language
+
+        const languageToggleBtn = document.getElementById('languageToggle');
+        const languageToggleMobileBtn = document.getElementById('languageToggleMobile');
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-lang-key-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-lang-key-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+             document.querySelectorAll('[data-lang-key-alt]').forEach(element => {
+                const key = element.getAttribute('data-lang-key-alt');
+                if (translations[lang] && translations[lang][key]) {
+                    element.alt = translations[lang][key];
+                }
+            });
+
+
+            if (languageToggleBtn) {
+                languageToggleBtn.textContent = lang === 'en' ? translations.fa.lang_toggle_fa : translations.en.lang_toggle_en;
+            }
+            if (languageToggleMobileBtn) {
+                 languageToggleMobileBtn.textContent = lang === 'en' ? translations.fa.lang_toggle_fa_mobile : translations.en.lang_toggle_en_mobile;
+            }
+        }
+
+        if (languageToggleBtn) {
+            languageToggleBtn.addEventListener('click', () => {
+                const newLang = currentLanguage === 'en' ? 'fa' : 'en';
+                setLanguage(newLang);
+            });
+        }
+        if (languageToggleMobileBtn) {
+            languageToggleMobileBtn.addEventListener('click', () => {
+                const newLang = currentLanguage === 'en' ? 'fa' : 'en';
+                setLanguage(newLang);
+            });
+        }
+        
+        // Initialize with default language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLanguage); // Set to 'en' by default
+        });
+
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                // Close mobile menu if open and a link is clicked
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuButton && mobileMenu && closeMobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+            });
+
+            closeMobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+
+            // Links inside mobile menu already handled by smooth scroll logic for closing
+        }
+        
+        // Modal Functionality
+        const messageModal = document.getElementById('messageModal');
+        const modalTitleElement = document.getElementById('modalTitle'); 
+        const modalMessageElement = document.getElementById('modalMessage'); 
+        const modalCloseButton = document.getElementById('modalCloseButton');
+        const modalOkButton = document.getElementById('modalOkButton');
+
+        function showModal(titleKey, messageKey, messageParams = {}) {
+            if (modalTitleElement && modalMessageElement && messageModal) {
+                modalTitleElement.textContent = translations[currentLanguage][titleKey] || titleKey;
+                let messageText = translations[currentLanguage][messageKey] || messageKey;
+                for (const key in messageParams) {
+                    messageText = messageText.replace(`{${key}}`, messageParams[key]);
+                }
+                modalMessageElement.textContent = messageText;
+                messageModal.classList.remove('hidden');
+                document.body.classList.add('modal-active');
+            }
+        }
+
+        function hideModal() {
+            if (messageModal) {
+                messageModal.classList.add('hidden');
+                document.body.classList.remove('modal-active');
+            }
+        }
+
+        if (modalCloseButton) modalCloseButton.addEventListener('click', hideModal);
+        if (modalOkButton) modalOkButton.addEventListener('click', hideModal);
+        if (messageModal) {
+            messageModal.addEventListener('click', function(event) {
+                if (event.target === messageModal) { 
+                    hideModal();
+                }
+            });
+        }
+
+        // Contact Form Submission
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nameInput = document.getElementById('name');
+                const name = nameInput ? nameInput.value : "User";
+                showModal('modal_message_sent_title', 'modal_message_sent_text', { name: name });
+                contactForm.reset();
+            });
+        }
+        
+
+        // Gemini API Integration
+        const apiKey = ""; 
+
+        const storyThemeInput = document.getElementById('storyTheme');
+        const generateStoryIdeasBtn = document.getElementById('generateStoryIdeasBtn');
+        const storyIdeasLoader = document.getElementById('storyIdeasLoader');
+        const storyIdeasResult = document.getElementById('storyIdeasResult');
+
+        const creativeBlockInput = document.getElementById('creativeBlock');
+        const breakBlockBtn = document.getElementById('breakBlockBtn');
+        const blockBreakerLoader = document.getElementById('blockBreakerLoader');
+        const blockBreakerResult = document.getElementById('blockBreakerResult');
+
+        async function callGeminiAPI(promptText, resultElement, loaderElement) {
+            if (!promptText.trim()) {
+                showModal('modal_input_required_title', 'modal_input_required_text');
+                return;
+            }
+
+            loaderElement.classList.remove('hidden');
+            resultElement.textContent = ''; 
+
+            let chatHistory = [{ role: "user", parts: [{ text: promptText }] }];
+            const payload = { contents: chatHistory };
+            // Always use gemini-2.0-flash for this example
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(`API request failed with status ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    resultElement.textContent = text.trim();
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    resultElement.textContent = 'Could not retrieve a valid response. Please try again.';
+                    showModal('modal_api_error_title', 'modal_api_error_text');
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                resultElement.textContent = `An error occurred: ${error.message}. Please try again later.`;
+                showModal('modal_error_title', 'modal_error_text', { errorMessage: error.message });
+            } finally {
+                loaderElement.classList.add('hidden');
+            }
+        }
+
+        if (generateStoryIdeasBtn) {
+            generateStoryIdeasBtn.addEventListener('click', async () => {
+                const theme = storyThemeInput.value;
+                // Prompt remains in English for consistent AI performance
+                const prompt = `You are Catharys, a creative guide. Generate 3 distinct and imaginative short story ideas based on the theme or keywords: "${theme}". Each idea should be a concise paragraph, sparking curiosity and creativity. Present them clearly, perhaps numbered or with a title for each.`;
+                await callGeminiAPI(prompt, storyIdeasResult, storyIdeasLoader);
+            });
+        }
+
+        if (breakBlockBtn) {
+            breakBlockBtn.addEventListener('click', async () => {
+                const blockDescription = creativeBlockInput.value;
+                // Prompt remains in English
+                const prompt = `You are Catharys, an empathetic creative guide. A person is experiencing a creative block described as: "${blockDescription}". Offer 3 actionable, encouraging, and practical suggestions or exercises to help them overcome this block and reignite their creativity. Frame your response as if you are speaking directly to them.`;
+                await callGeminiAPI(prompt, blockBreakerResult, blockBreakerLoader);
+            });
+        }
+    </script>
+</body>
+</html>
