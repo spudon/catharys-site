@@ -46,7 +46,7 @@
         .modal-content {
             transition: transform 0.25s ease;
         }
-        /* Loading spinner */
+        /* Loading spinner - Kept in case needed for other async operations in future, though AI is removed */
         .loader {
             border: 4px solid #f3f3f3; /* Light grey */
             border-top: 4px solid #fca311; /* Orange */
@@ -160,7 +160,7 @@
                 </div>
                 <div class="bg-white rounded-xl shadow-lg p-8 text-center transform hover:-translate-y-2 transition duration-300 ease-in-out">
                     <div class="text-orange-600 mb-4">
-                         <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service2_title">Creative Writing Workshops</h3>
                     <p class="text-gray-700 leading-relaxed" data-lang-key="service2_text">Engaging group workshops designed to spark creativity, develop writing skills, and foster a supportive community for aspiring and seasoned writers.</p>
@@ -192,49 +192,6 @@
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-3" data-lang-key="service6_title">Creative Project Mentorship</h3>
                     <p class="text-gray-700 leading-relaxed" data-lang-key="service6_text">Receive personalized guidance and feedback on your creative projects, from initial concept to final execution, ensuring your vision comes to life.</p>
-                </div>
-            </div>
-
-            <div id="ai-tools" class="mt-16 pt-12 border-t border-gray-300">
-                <h3 class="text-3xl md:text-4xl font-bold text-center mb-10 section-heading mx-auto" data-lang-key="ai_tools_heading">✨ AI-Powered Creative Tools</h3>
-                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-                        <h4 class="text-2xl font-semibold text-gray-800 mb-4 text-center" data-lang-key="ai_story_generator_title">Story Idea Generator ✨</h4>
-                        <div class="mb-4">
-                            <label for="storyTheme" class="block text-sm font-medium text-gray-700 mb-1" data-lang-key="ai_story_generator_label">Enter a theme or keywords:</label>
-                            <input type="text" id="storyTheme" name="storyTheme" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500" placeholder="e.g., mystery, friendship, space travel" data-lang-key-placeholder="ai_story_generator_placeholder">
-                        </div>
-                        <button id="generateStoryIdeasBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center" data-lang-key="ai_story_generator_button">
-                            Generate Ideas
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 rtl:mr-2 rtl:ml-0" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                        <div id="storyIdeasLoader" class="mt-4 hidden">
-                            <div class="loader"></div>
-                            <p class="text-center text-gray-600 mt-2" data-lang-key="ai_story_generator_loading">Generating ideas...</p>
-                        </div>
-                        <div id="storyIdeasResult" class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[100px] text-gray-700 whitespace-pre-wrap"></div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
-                        <h4 class="text-2xl font-semibold text-gray-800 mb-4 text-center" data-lang-key="ai_block_breaker_title">Creative Block Breaker ✨</h4>
-                        <div class="mb-4">
-                            <label for="creativeBlock" class="block text-sm font-medium text-gray-700 mb-1" data-lang-key="ai_block_breaker_label">Describe your creative block:</label>
-                            <textarea id="creativeBlock" name="creativeBlock" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500" placeholder="e.g., I can't start my novel, I lack inspiration for my painting..." data-lang-key-placeholder="ai_block_breaker_placeholder"></textarea>
-                        </div>
-                        <button id="breakBlockBtn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out flex items-center justify-center" data-lang-key="ai_block_breaker_button">
-                            Get Unstuck!
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 rtl:mr-2 rtl:ml-0" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L9 9.617l-4.389 1.996A1 1 0 003 13.5V17a1 1 0 001 1h12a1 1 0 001-1v-3.5a1 1 0 00-.611-1.887L11 9.617l6.389-2.697a1 1 0 000-1.84l-7-3zM15 16H5V14.07l3.611-1.642a1 1 0 00.778 0L15 14.07V16zm-1.889-4.914l-2.611-1.187a1 1 0 00-.778 0L7.09 11.086l-3.279-1.4a1 1 0 00-.811.453L1 11.587V13h18v-1.413l-2-1.44a1 1 0 00-.811-.453l-3.279 1.4zM10 7.617L3.611 5.086l7-3 6.389 2.531L10 7.617z" />
-                            </svg>
-                        </button>
-                        <div id="blockBreakerLoader" class="mt-4 hidden">
-                            <div class="loader"></div>
-                             <p class="text-center text-gray-600 mt-2" data-lang-key="ai_block_breaker_loading">Finding solutions...</p>
-                        </div>
-                        <div id="blockBreakerResult" class="mt-4 p-4 bg-gray-50 rounded-lg min-h-[100px] text-gray-700 whitespace-pre-wrap"></div>
-                    </div>
                 </div>
             </div>
 
@@ -318,7 +275,7 @@
                 </form>
                 <div class="text-center mt-8 text-gray-600">
                     <p class="mb-2" data-lang-key="contact_direct_email_intro">You can also reach me directly at:</p>
-                    <p class="text-lg font-medium text-orange-600">contact@catharys.com</p>
+                    <p class="text-lg font-medium text-orange-600">catharyspaydar@gmail.com</p> {/* Email updated here */}
                     </div>
             </div>
         </div>
@@ -391,17 +348,7 @@
                 service5_text: "Develop a cohesive content strategy rooted in powerful narratives that engage your audience and achieve your communication goals.",
                 service6_title: "Creative Project Mentorship",
                 service6_text: "Receive personalized guidance and feedback on your creative projects, from initial concept to final execution, ensuring your vision comes to life.",
-                ai_tools_heading: "✨ AI-Powered Creative Tools",
-                ai_story_generator_title: "Story Idea Generator ✨",
-                ai_story_generator_label: "Enter a theme or keywords:",
-                ai_story_generator_placeholder: "e.g., mystery, friendship, space travel",
-                ai_story_generator_button: "Generate Ideas",
-                ai_story_generator_loading: "Generating ideas...",
-                ai_block_breaker_title: "Creative Block Breaker ✨",
-                ai_block_breaker_label: "Describe your creative block:",
-                ai_block_breaker_placeholder: "e.g., I can't start my novel, I lack inspiration for my painting...",
-                ai_block_breaker_button: "Get Unstuck!",
-                ai_block_breaker_loading: "Finding solutions...",
+                // AI tools translations removed as the section is removed
                 services_inquire_button: "Inquire About Services",
                 blog_heading: "The Storyteller's Sanctuary",
                 blog1_title: "Finding Your Voice in the Quiet Moments",
@@ -429,18 +376,18 @@
                 contact_message_label: "Message",
                 contact_message_placeholder: "Write your message here...",
                 contact_send_button: "Send Message",
-                contact_direct_email_intro: "You can also reach me directly at:",
+                contact_direct_email_intro: "You can also reach me directly at:", // This key remains, but the actual email is hardcoded in HTML
                 footer_copyright: "&copy; 2025 Catharys. All rights reserved.",
                 footer_design_credit: "Designed with passion by Catharys.",
                 modal_title_default: "Message",
                 modal_ok_button: "OK",
                 modal_message_sent_title: "Message Sent!",
                 modal_message_sent_text: "Thank you, {name}. Your message has been received (simulated).",
-                modal_input_required_title: "Input Required",
+                modal_input_required_title: "Input Required", // Kept for potential future use with other inputs
                 modal_input_required_text: "Please enter some text to get started.",
-                modal_api_error_title: "API Error",
-                modal_api_error_text: "Received an unexpected response from the AI. Please check the console for details.",
-                modal_error_title: "Error",
+                modal_api_error_title: "API Error", // Kept for potential future use
+                modal_api_error_text: "Received an unexpected response. Please check the console for details.",
+                modal_error_title: "Error", // Kept for general errors
                 modal_error_text: "An error occurred: {errorMessage}. Check the console for more details."
             },
             fa: {
@@ -482,17 +429,7 @@
                 service5_text: "توسعه یک استراتژی محتوای منسجم ریشه‌دار در روایت‌های قدرتمند که مخاطبان شما را درگیر کرده و به اهداف ارتباطی شما دست می‌یابد.",
                 service6_title: "مربیگری پروژه‌های خلاق",
                 service6_text: "دریافت راهنمایی و بازخورد شخصی‌سازی‌شده در مورد پروژه‌های خلاقانه خود، از مفهوم اولیه تا اجرای نهایی، برای اطمینان از جان گرفتن دیدگاه شما.",
-                ai_tools_heading: "✨ ابزارهای خلاقیت مبتنی بر هوش مصنوعی",
-                ai_story_generator_title: "✨ تولیدکننده ایده داستان",
-                ai_story_generator_label: "یک تم یا کلمات کلیدی وارد کنید:",
-                ai_story_generator_placeholder: "مثال: رازآلود، دوستی، سفر فضایی",
-                ai_story_generator_button: "تولید ایده‌ها",
-                ai_story_generator_loading: "در حال تولید ایده‌ها...",
-                ai_block_breaker_title: "✨ شکننده سد خلاقیت",
-                ai_block_breaker_label: "سد خلاقیت خود را توصیف کنید:",
-                ai_block_breaker_placeholder: "مثال: نمی‌توانم رمانم را شروع کنم، برای نقاشی‌ام الهام ندارم...",
-                ai_block_breaker_button: "از سد عبور کن!",
-                ai_block_breaker_loading: "در حال یافتن راه‌حل...",
+                // AI tools translations removed
                 services_inquire_button: "استعلام درباره خدمات",
                 blog_heading: "پناهگاه داستان‌سرا",
                 blog1_title: "یافتن صدای خود در لحظات سکوت",
@@ -507,7 +444,7 @@
                 blog3_date: "منتشر شده در ۱۵ می ۲۰۲۵",
                 blog3_excerpt: "نقص را در آغوش بگیرید! بیاموزید چرا پیش‌نویس خام و پرداخت‌نشده اولیه یک گام اساسی در فرآیند خلاقیت است و چگونه ارزش واقعی آن را جشن بگیرید.",
                 blog3_image_alt: "تصویر پست وبلاگ: پیش‌نویس‌های اولیه",
-                blog_read_more: "بیشتر بخوانید &larr;", // RTL arrow
+                blog_read_more: "بیشتر بخوانید &larr;",
                 blog_view_all_button: "مشاهده تمام پست‌های وبلاگ",
                 contact_heading: "ارتباط با کثاریس",
                 contact_description: "آماده‌اید داستان خود را کشف کنید؟ درباره یک پروژه خلاقانه سوالی دارید؟ خوشحال می‌شوم از شما بشنوم.",
@@ -530,7 +467,7 @@
                 modal_input_required_title: "ورودی لازم است",
                 modal_input_required_text: "لطفاً برای شروع مقداری متن وارد کنید.",
                 modal_api_error_title: "خطای API",
-                modal_api_error_text: "پاسخ غیرمنتظره‌ای از هوش مصنوعی دریافت شد. لطفاً کنسول را برای جزئیات بررسی کنید.",
+                modal_api_error_text: "پاسخ غیرمنتظره‌ای دریافت شد. لطفاً کنسول را برای جزئیات بررسی کنید.",
                 modal_error_title: "خطا",
                 modal_error_text: "خطایی رخ داد: {errorMessage}. برای جزئیات بیشتر کنسول را بررسی کنید."
             }
@@ -625,8 +562,6 @@
             closeMobileMenuButton.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
             });
-
-            // Links inside mobile menu already handled by smooth scroll logic for closing
         }
         
         // Modal Functionality
@@ -678,85 +613,9 @@
             });
         }
         
-
-        // Gemini API Integration
-        const apiKey = ""; 
-
-        const storyThemeInput = document.getElementById('storyTheme');
-        const generateStoryIdeasBtn = document.getElementById('generateStoryIdeasBtn');
-        const storyIdeasLoader = document.getElementById('storyIdeasLoader');
-        const storyIdeasResult = document.getElementById('storyIdeasResult');
-
-        const creativeBlockInput = document.getElementById('creativeBlock');
-        const breakBlockBtn = document.getElementById('breakBlockBtn');
-        const blockBreakerLoader = document.getElementById('blockBreakerLoader');
-        const blockBreakerResult = document.getElementById('blockBreakerResult');
-
-        async function callGeminiAPI(promptText, resultElement, loaderElement) {
-            if (!promptText.trim()) {
-                showModal('modal_input_required_title', 'modal_input_required_text');
-                return;
-            }
-
-            loaderElement.classList.remove('hidden');
-            resultElement.textContent = ''; 
-
-            let chatHistory = [{ role: "user", parts: [{ text: promptText }] }];
-            const payload = { contents: chatHistory };
-            // Always use gemini-2.0-flash for this example
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('API Error:', errorData);
-                    throw new Error(`API request failed with status ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
-                }
-
-                const result = await response.json();
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    resultElement.textContent = text.trim();
-                } else {
-                    console.error('Unexpected API response structure:', result);
-                    resultElement.textContent = 'Could not retrieve a valid response. Please try again.';
-                    showModal('modal_api_error_title', 'modal_api_error_text');
-                }
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                resultElement.textContent = `An error occurred: ${error.message}. Please try again later.`;
-                showModal('modal_error_title', 'modal_error_text', { errorMessage: error.message });
-            } finally {
-                loaderElement.classList.add('hidden');
-            }
-        }
-
-        if (generateStoryIdeasBtn) {
-            generateStoryIdeasBtn.addEventListener('click', async () => {
-                const theme = storyThemeInput.value;
-                // Prompt remains in English for consistent AI performance
-                const prompt = `You are Catharys, a creative guide. Generate 3 distinct and imaginative short story ideas based on the theme or keywords: "${theme}". Each idea should be a concise paragraph, sparking curiosity and creativity. Present them clearly, perhaps numbered or with a title for each.`;
-                await callGeminiAPI(prompt, storyIdeasResult, storyIdeasLoader);
-            });
-        }
-
-        if (breakBlockBtn) {
-            breakBlockBtn.addEventListener('click', async () => {
-                const blockDescription = creativeBlockInput.value;
-                // Prompt remains in English
-                const prompt = `You are Catharys, an empathetic creative guide. A person is experiencing a creative block described as: "${blockDescription}". Offer 3 actionable, encouraging, and practical suggestions or exercises to help them overcome this block and reignite their creativity. Frame your response as if you are speaking directly to them.`;
-                await callGeminiAPI(prompt, blockBreakerResult, blockBreakerLoader);
-            });
-        }
+        // Gemini API related JavaScript has been removed.
+        // Variables like apiKey, storyThemeInput, generateStoryIdeasBtn, etc. are removed.
+        // The callGeminiAPI function and its event listeners are removed.
     </script>
 </body>
 </html>
